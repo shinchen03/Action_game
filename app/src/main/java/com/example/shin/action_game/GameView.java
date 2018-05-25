@@ -8,10 +8,9 @@ import android.graphics.Paint;
 import android.view.View;
 
 public class GameView extends View {
-    private static final Paint PAINT = new Paint();
-    private Bitmap droidBitmap;
     private static final int START_GROUND_HEIGHT = 50;
     private Ground ground;
+    private Droid droid;
 
     public GameView(Context context) {
         super(context);
@@ -22,15 +21,19 @@ public class GameView extends View {
         int width = canvas.getWidth();
         int height = canvas.getHeight();
 
-        if (droidBitmap == null) {
-            droidBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.pacmanghost);
+//        if (droidBitmap == null) {
+//            droidBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.pacmanghost);
+//        }
+        if (droid == null) {
+            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.droid);
+            droid = new Droid(bitmap, 0, 0);
         }
 
         if (ground == null) {
             ground = new Ground(0, height = START_GROUND_HEIGHT, width, height);
         }
 
-        canvas.drawBitmap(droidBitmap, 0, 0, PAINT);
+        droid.draw(canvas);
         ground.draw(canvas);
     }
 }
