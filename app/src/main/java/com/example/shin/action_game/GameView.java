@@ -21,6 +21,7 @@ public class GameView extends View {
         int width = canvas.getWidth();
         int height = canvas.getHeight();
 
+
 //        if (droidBitmap == null) {
 //            droidBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.pacmanghost);
 //        }
@@ -33,7 +34,10 @@ public class GameView extends View {
             ground = new Ground(0, height = START_GROUND_HEIGHT, width, height);
         }
 
+        droid.move(); // move down
+
         droid.draw(canvas);
         ground.draw(canvas);
+        invalidate(); // loop this method
     }
 }

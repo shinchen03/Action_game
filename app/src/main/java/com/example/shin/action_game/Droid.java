@@ -19,4 +19,8 @@ public class Droid {
     public void draw(Canvas canvas) {
         canvas.drawBitmap(bitmap, rect.left, rect.top, paint);
     }
+
+    public void move() {
+        rect.offset(0, 5);
+    }
 }
