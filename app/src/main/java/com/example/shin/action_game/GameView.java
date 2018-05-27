@@ -7,7 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.view.View;
 
-public class GameView extends View {
+public class GameView extends View implements Droid.Callback {
     private static final int START_GROUND_HEIGHT = 50;
     private Ground ground;
     private Droid droid;
@@ -27,7 +27,7 @@ public class GameView extends View {
 //        }
         if (droid == null) {
             Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.droid);
-            droid = new Droid(bitmap, 0, 0);
+            droid = new Droid(bitmap, 0, 0, this);
         }
 
         if (ground == null) {
@@ -40,4 +40,8 @@ public class GameView extends View {
         ground.draw(canvas);
         invalidate(); // loop this method
     }
+    @Override
+    public int getDistanceFromGround(Droid droid) {
+        return ground.rect.top - droid.rect.bottom;
+     }
 }
