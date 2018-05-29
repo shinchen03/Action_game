@@ -7,10 +7,18 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 
 public class Droid {
+
+    private static final float GRAVITY = 0.8f;
+    private static final float WEIGHT = GRAVITY  * 60;
+    private float acceleration = 0;
     private final Paint paint = new Paint();
     private Bitmap bitmap;
     private  final Callback callback;
     final Rect rect;
+
+    public void jump(float power) {
+        acceleration = power * WEIGHT;
+    }
 
     public Droid(Bitmap bitmap, int left, int top, Callback callback) {
         this.rect = new Rect(left, top, left + bitmap.getWidth(), top + bitmap.getHeight());
@@ -23,11 +31,15 @@ public class Droid {
     }
 
     public void move() {
+        acceleration -= GRAVITY;
         int distanceFromGround = callback.getDistanceFromGround(this);
-        if (distanceFromGround <= 0) {
-            return;
+//        if (distanceFromGround <= 0) {
+//            return;
+//        }
+        if (acceleration < 0 && acceleration < -distanceFromGround) {
+            acceleration = -distanceFromGround;
         }
-        rect.offset(0, 5);
+        rect.offset(0, -Math.round(acceleration));
     }
 
     public interface Callback {
