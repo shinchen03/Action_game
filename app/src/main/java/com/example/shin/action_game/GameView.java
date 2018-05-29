@@ -10,6 +10,7 @@ import android.view.View;
 
 public class GameView extends View implements Droid.Callback {
     private static final int START_GROUND_HEIGHT = 50;
+    private static final int GROUND_MOVE_TO_LEFT = 10;
     private Ground ground;
     private Droid droid;
     private static final int MAX_TOUCH_TIME = 500;
@@ -68,10 +69,16 @@ public class GameView extends View implements Droid.Callback {
 
         droid.draw(canvas);
         ground.draw(canvas);
+        ground.move(GROUND_MOVE_TO_LEFT);
         invalidate(); // loop this method
     }
     @Override
     public int getDistanceFromGround(Droid droid) {
+        boolean horizontal = !(droid.rect.left >= ground.rect.right
+                || droid.rect.right <= ground.rect.left);
+        if (!horizontal) {
+            return Integer.MAX_VALUE;
+        }
         return ground.rect.top - droid.rect.bottom;
     }
 }

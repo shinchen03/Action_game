@@ -18,4 +18,9 @@ public class Ground {
         canvas.drawRect (rect, paint);
     }
 
+    public void move (int moveToLeft) {
+        rect.offset(-moveToLeft, 0);
+
+    }
+
 }
