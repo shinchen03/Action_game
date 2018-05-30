@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -106,8 +107,19 @@ public class GameView extends SurfaceView implements Droid.Callback, SurfaceHold
         droid.jump(time / MAX_TOUCH_TIME);
     }
 
+    public interface Callback {
+        public void onGameOver();
+    }
+    private Callback callback;
+    public void setCallback (Callback callback) {
+        this.callback = callback;
+    }
+    private final Handler handler;
+    private boolean isGameOver;
+
     public GameView(Context context) {
         super(context);
+        handler = new Handler();
         getHolder().addCallback(this);
     }
 
@@ -126,7 +138,7 @@ public class GameView extends SurfaceView implements Droid.Callback, SurfaceHold
         }
         lastGround = new Ground(0, height - START_GROUND_HEIGHT, width, height);
 
-        if (lastGround.isShown(width. height)) {
+        if (lastGround.isShown(width, height)) {
             for (int i=0; i<ADD_GROUND_COUNT; i++) {
                 int left = lastGround.rect.right;
                 int groundHeight = rand.nextInt(height / GROUND_BLOCK_HEIGHT)
@@ -174,9 +186,26 @@ public class GameView extends SurfaceView implements Droid.Callback, SurfaceHold
             boolean horizontal = !(droid.rect.left >= ground.rect.right
                     || droid.rect.right <= ground.rect.left);
             if (horizontal) {
-                return ground.rect.top - droid.rect.bottom;
+                int distanceFromGround = ground.rect.top - droid.rect.bottom;
+                if (distanceFromGround < 0) {
+                    gameOver();
+                    return Integer.MAX_VALUE;
+                }
+                return distanceFromGround;
             }
         }
         return Integer.MAX_VALUE;
+    }
+
+    private void gameOver() {
+        if (isGameOver) return;
+        isGameOver = true;
+        droid.shutdown();
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                callback.onGameOver();
+            }
+        });
     }
 }

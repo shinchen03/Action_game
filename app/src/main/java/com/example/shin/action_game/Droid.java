@@ -46,4 +46,7 @@ public class Droid {
         public int getDistanceFromGround(Droid droid);
     }
 
+    public void shutdown() {
+        acceleration = 0;
+    }
 }
