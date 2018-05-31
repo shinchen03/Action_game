@@ -5,12 +5,10 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.view.View;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,7 +71,7 @@ public class GameView extends SurfaceView implements Droid.Callback, SurfaceHold
     private static final int ADD_GROUND_COUNT = 5;
     private static final int GROUND_WIDTH = 340;
     private static final int GROUND_BLOCK_HEIGHT = 100;
-    private final List<Ground> groundList = new ArrayList<Ground>();
+    private final List<Ground> groundList = new ArrayList<>();
     private final Random rand = new Random();
     private Ground lastGround;
     private Droid droid;
@@ -86,7 +84,7 @@ public class GameView extends SurfaceView implements Droid.Callback, SurfaceHold
                 touchDownStartTime = System.currentTimeMillis();
                 return true;
             case MotionEvent.ACTION_UP:
-                jumpDroid(0);
+                jumpDroid(10);
                 break;
         }
         return super.onTouchEvent(event);
@@ -133,11 +131,12 @@ public class GameView extends SurfaceView implements Droid.Callback, SurfaceHold
 //            droidBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.pacmanghost);
 //        }
         if (droid == null) {
-            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.pacmanghost);
+            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.pacmanred);
+            bitmap= Bitmap.createScaledBitmap(bitmap, 150, 150, false);
             droid = new Droid(bitmap, 0, 0, this);
         }
-        lastGround = new Ground(0, height - START_GROUND_HEIGHT, width, height);
-
+        lastGround = new Ground(0, 3*height/4, width, height);
+        groundList.add(lastGround);
         if (lastGround.isShown(width, height)) {
             for (int i=0; i<ADD_GROUND_COUNT; i++) {
                 int left = lastGround.rect.right;
