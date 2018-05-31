@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -65,7 +66,7 @@ public class GameView extends SurfaceView implements Droid.Callback, SurfaceHold
     public void surfaceDestroyed(SurfaceHolder holder) {
         stopDrawThread();
     }
-
+    private final Paint paint = new Paint();
     private static final int START_GROUND_HEIGHT = 50;
     private static final int GROUND_MOVE_TO_LEFT = 10;
     private static final int ADD_GROUND_COUNT = 5;
@@ -134,9 +135,12 @@ public class GameView extends SurfaceView implements Droid.Callback, SurfaceHold
             Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.pacmanred);
             bitmap= Bitmap.createScaledBitmap(bitmap, 150, 150, false);
             droid = new Droid(bitmap, 0, 0, this);
+            lastGround = new Ground(0, 3*height/4, width, height);
+            groundList.add(lastGround);
+            Bitmap sun = BitmapFactory.decodeResource(getResources(), R.drawable.sun);
+            sun= Bitmap.createScaledBitmap(sun, 50, 50, false);
+            canvas.drawBitmap(sun, 100, 100, paint);
         }
-        lastGround = new Ground(0, 3*height/4, width, height);
-        groundList.add(lastGround);
         if (lastGround.isShown(width, height)) {
             for (int i=0; i<ADD_GROUND_COUNT; i++) {
                 int left = lastGround.rect.right;

@@ -1,5 +1,6 @@
 package com.example.shin.action_game;
 
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
