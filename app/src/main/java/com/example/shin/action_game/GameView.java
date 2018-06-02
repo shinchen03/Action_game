@@ -75,6 +75,7 @@ public class GameView extends SurfaceView implements Droid.Callback, SurfaceHold
     private final List<Ground> groundList = new ArrayList<>();
     private final Random rand = new Random();
     private Ground lastGround;
+    private Background newSun;
     private Droid droid;
     private static final int MAX_TOUCH_TIME = 500;
     private long touchDownStartTime;
@@ -138,8 +139,10 @@ public class GameView extends SurfaceView implements Droid.Callback, SurfaceHold
             lastGround = new Ground(0, 3*height/4, width, height);
             groundList.add(lastGround);
             Bitmap sun = BitmapFactory.decodeResource(getResources(), R.drawable.sun);
-            sun= Bitmap.createScaledBitmap(sun, 50, 50, false);
-            canvas.drawBitmap(sun, 100, 100, paint);
+            sun= Bitmap.createScaledBitmap(sun, 150, 150, false);
+            newSun = new Background(sun, 0, 0, 0, 0);
+//            canvas.drawBitmap(sun, 100, 100, paint);
+
         }
         if (lastGround.isShown(width, height)) {
             for (int i=0; i<ADD_GROUND_COUNT; i++) {
@@ -172,6 +175,8 @@ public class GameView extends SurfaceView implements Droid.Callback, SurfaceHold
         droid.move(); // move down
 
         droid.draw(canvas);
+        newSun.draw(canvas);
+
         // invalidate(); // loop this method
     }
 
