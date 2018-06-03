@@ -8,8 +8,8 @@ import android.graphics.Rect;
 
 public class Droid {
 
-    private static final int COLLISION_MARGIN_LEFT = 15;
-    private static final int COLLISION_MARGIN_RIGHT = 15;
+    private static final int COLLISION_MARGIN_LEFT = 10;
+    private static final int COLLISION_MARGIN_RIGHT = 10;
     private static final float GRAVITY = 0.8f;
     private static final float WEIGHT = GRAVITY  * 60;
     private float acceleration = 0;
@@ -53,5 +53,9 @@ public class Droid {
 
     public void shutdown() {
         acceleration = 0;
+    }
+
+    public void clear() {
+
     }
 }

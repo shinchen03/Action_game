@@ -79,6 +79,16 @@ public class GameView extends SurfaceView implements Droid.Callback, SurfaceHold
     private Droid droid;
     private static final int MAX_TOUCH_TIME = 500;
     private long touchDownStartTime;
+    private static final float POWER_GAUGE_HEIGHT = 30;
+    private static final Paint PAINT_POWER_GAUGE = new Paint();
+    private static final float SCORE_TEXT_SIZE = 80.0f;
+    private long score;
+
+    static {
+        PAINT_POWER_GAUGE.setColor(Color.RED);
+    }
+
+
     @Override
     public boolean onTouchEvent (MotionEvent event) {
         switch (event.getAction()) {
@@ -121,6 +131,9 @@ public class GameView extends SurfaceView implements Droid.Callback, SurfaceHold
         super(context);
         handler = new Handler();
         getHolder().addCallback(this);
+        paint.setColor(Color.BLACK);
+        paint.setTextSize(SCORE_TEXT_SIZE);
+        paint.setAntiAlias(true);
     }
 
     public void drawGame(Canvas canvas) {
@@ -133,7 +146,7 @@ public class GameView extends SurfaceView implements Droid.Callback, SurfaceHold
 //            droidBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.pacmanghost);
 //        }
         if (droid == null) {
-            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.pacmanred);
+            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ghostred);
             bitmap= Bitmap.createScaledBitmap(bitmap, 150, 150, false);
             droid = new Droid(bitmap, 0, 0, this);
             lastGround = new Ground(0, 3*height/4, width, height);
@@ -149,8 +162,13 @@ public class GameView extends SurfaceView implements Droid.Callback, SurfaceHold
                 int left = lastGround.rect.right;
                 int groundHeight = rand.nextInt(height / GROUND_BLOCK_HEIGHT)
                         * GROUND_BLOCK_HEIGHT / 2 + START_GROUND_HEIGHT;
-                lastGround = new Ground(left, height - groundHeight,
-                        left + GROUND_WIDTH, height);
+                if (i % 2 == 0) {
+                    lastGround = new Ground(left, height - groundHeight,
+                            left + GROUND_WIDTH, height);
+                } else {
+                    lastGround = new Blank(left, height - groundHeight,
+                            left + GROUND_WIDTH, height);
+                }
                 groundList.add(lastGround);
             }
         }
@@ -176,8 +194,14 @@ public class GameView extends SurfaceView implements Droid.Callback, SurfaceHold
 
         droid.draw(canvas);
         newSun.draw(canvas);
-
+        score += 10;
+        canvas.drawText("Score:" + score, 0, SCORE_TEXT_SIZE, paint);
         // invalidate(); // loop this method
+        if (touchDownStartTime > 0) {
+            float elapsedTime = System.currentTimeMillis() - touchDownStartTime;
+            canvas.drawRect(0, 0, width * (elapsedTime / MAX_TOUCH_TIME),
+                    POWER_GAUGE_HEIGHT, PAINT_POWER_GAUGE);
+        }
     }
 
     @Override
@@ -194,6 +218,9 @@ public class GameView extends SurfaceView implements Droid.Callback, SurfaceHold
             boolean horizontal = !(droid.rect.left >= ground.rect.right
                     || droid.rect.right <= ground.rect.left);
             if (horizontal) {
+                if (!ground.isSolid()) {
+                    return Integer.MAX_VALUE;
+                }
                 int distanceFromGround = ground.rect.top - droid.rect.bottom;
                 if (distanceFromGround < 0) {
                     gameOver();
@@ -209,6 +236,8 @@ public class GameView extends SurfaceView implements Droid.Callback, SurfaceHold
         if (isGameOver) return;
         isGameOver = true;
         droid.shutdown();
+        //droid = null;
+        score = 0;
         handler.post(new Runnable() {
             @Override
             public void run() {
