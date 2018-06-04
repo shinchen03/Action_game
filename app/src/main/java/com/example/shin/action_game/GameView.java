@@ -104,6 +104,7 @@ public class GameView extends SurfaceView implements Droid.Callback, SurfaceHold
 
     private void jumpDroid(float power) {
         float time = System.currentTimeMillis() - touchDownStartTime;
+        time /= 1.5;
         touchDownStartTime = 0;
 
         if (getDistanceFromGround(droid) != 0) {
@@ -147,7 +148,7 @@ public class GameView extends SurfaceView implements Droid.Callback, SurfaceHold
 //        }
         if (droid == null) {
             Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ghostred);
-            bitmap= Bitmap.createScaledBitmap(bitmap, 150, 150, false);
+            bitmap= Bitmap.createScaledBitmap(bitmap, 120, 120, false);
             droid = new Droid(bitmap, 0, 0, this);
             lastGround = new Ground(0, 3*height/4, width, height);
             groundList.add(lastGround);
@@ -155,7 +156,6 @@ public class GameView extends SurfaceView implements Droid.Callback, SurfaceHold
             sun= Bitmap.createScaledBitmap(sun, 150, 150, false);
             newSun = new Background(sun, 0, 0, 0, 0);
 //            canvas.drawBitmap(sun, 100, 100, paint);
-
         }
         if (lastGround.isShown(width, height)) {
             for (int i=0; i<ADD_GROUND_COUNT; i++) {
@@ -194,11 +194,13 @@ public class GameView extends SurfaceView implements Droid.Callback, SurfaceHold
 
         droid.draw(canvas);
         newSun.draw(canvas);
-        score += 10;
+        if (!isGameOver) score += 10;
+
         canvas.drawText("Score:" + score, 0, SCORE_TEXT_SIZE, paint);
         // invalidate(); // loop this method
         if (touchDownStartTime > 0) {
             float elapsedTime = System.currentTimeMillis() - touchDownStartTime;
+            elapsedTime /= 1.5;
             canvas.drawRect(0, 0, width * (elapsedTime / MAX_TOUCH_TIME),
                     POWER_GAUGE_HEIGHT, PAINT_POWER_GAUGE);
         }
@@ -237,7 +239,6 @@ public class GameView extends SurfaceView implements Droid.Callback, SurfaceHold
         isGameOver = true;
         droid.shutdown();
         //droid = null;
-        score = 0;
         handler.post(new Runnable() {
             @Override
             public void run() {

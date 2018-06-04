@@ -8,8 +8,8 @@ import android.graphics.Rect;
 
 public class Droid {
 
-    private static final int COLLISION_MARGIN_LEFT = 10;
-    private static final int COLLISION_MARGIN_RIGHT = 10;
+    private static final int COLLISION_MARGIN_LEFT = 3;
+    private static final int COLLISION_MARGIN_RIGHT = 3;
     private static final float GRAVITY = 0.8f;
     private static final float WEIGHT = GRAVITY  * 60;
     private float acceleration = 0;
@@ -26,7 +26,7 @@ public class Droid {
         //this.rect = new Rect(left, top, left + bitmap.getWidth(), top + bitmap.getHeight());
         int rectLeft = left + COLLISION_MARGIN_LEFT;
         int rectRight = left + bitmap.getWidth() - COLLISION_MARGIN_RIGHT;
-        this.rect = new Rect(rectLeft, top, rectRight, top + bitmap.getHeight() - 5);
+        this.rect = new Rect(rectLeft, top, rectRight, top + bitmap.getHeight());
         this.bitmap = bitmap;
         this.callback = callback;
     }
