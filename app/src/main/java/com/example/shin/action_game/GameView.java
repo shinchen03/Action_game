@@ -195,7 +195,6 @@ public class GameView extends SurfaceView implements Droid.Callback, SurfaceHold
         droid.draw(canvas);
         newSun.draw(canvas);
         if (!isGameOver) score += 10;
-
         canvas.drawText("Score:" + score, 0, SCORE_TEXT_SIZE, paint);
         // invalidate(); // loop this method
         if (touchDownStartTime > 0) {

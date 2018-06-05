@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Action_game</string>
+    <string name="msg">press the <i>right</i> button</string>
+    <string name="dialog_restart">もう一度遊ぶ</string>
+    <string name="dialog_gameover">げーむおーばー</string>
+    <string name="dialog_ranking">らいんきんぐ</string>
 </resources>

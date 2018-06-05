@@ -1,6 +1,8 @@
 package com.example.shin.action_game;
 
 import android.app.Activity;
+import android.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -9,7 +11,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class MyActivity extends Activity implements GameView.Callback {
+public class MyActivity extends AppCompatActivity implements GameView.Callback {
 
     private GameView gameView;
 
@@ -32,6 +34,9 @@ public class MyActivity extends Activity implements GameView.Callback {
     @Override
     public void onGameOver() {
         Toast.makeText(this, "Game OVer", Toast.LENGTH_LONG).show();
+        DialogFragment dialog = new MyDialog();
+
+        dialog.show(getFragmentManager(), "test");
     }
 
     @Override
@@ -44,5 +49,12 @@ public class MyActivity extends Activity implements GameView.Callback {
     protected void onPause() {
         super.onPause();
         gameView.stopDrawThread();
+    }
+
+    public void reStart() {
+        gameView = new GameView(this);
+        gameView.setCallback(this);
+        setContentView(R.layout.activity_my);
+        setContentView(gameView);
     }
 }
