@@ -48,6 +48,7 @@ public class MyDialog extends DialogFragment {
                     }
                 });
         // Create the AlertDialog object and return it
+        this.setCancelable(false);
         return builder.create();
     }
 }

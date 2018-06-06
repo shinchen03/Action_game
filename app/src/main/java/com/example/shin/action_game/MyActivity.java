@@ -11,7 +11,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class MyActivity extends AppCompatActivity implements GameView.Callback {
+public class MyActivity extends AppCompatActivity implements GameView.Callback, MyDialog.NoticeDialogListener {
 
     private GameView gameView;
 
@@ -34,9 +34,7 @@ public class MyActivity extends AppCompatActivity implements GameView.Callback {
     @Override
     public void onGameOver() {
         Toast.makeText(this, "Game OVer", Toast.LENGTH_LONG).show();
-        DialogFragment dialog = new MyDialog();
-
-        dialog.show(getFragmentManager(), "test");
+        showNoticeDialog();
     }
 
     @Override
@@ -51,10 +49,26 @@ public class MyActivity extends AppCompatActivity implements GameView.Callback {
         gameView.stopDrawThread();
     }
 
-    public void reStart() {
+    public void showNoticeDialog() {
+        // Create an instance of the dialog fragment and show it
+        DialogFragment dialog = new MyDialog();
+        dialog.show(getFragmentManager(), "test");
+    }
+
+    // The dialog fragment receives a reference to this Activity through the
+    // Fragment.onAttach() callback, which it uses to call the following methods
+    // defined by the NoticeDialogFragment.NoticeDialogListener interface
+    @Override
+    public void onDialogPositiveClick(DialogFragment dialog) {
+        // User touched the dialog's positive button
         gameView = new GameView(this);
         gameView.setCallback(this);
         setContentView(R.layout.activity_my);
         setContentView(gameView);
+    }
+
+    @Override
+    public void onDialogNegativeClick(DialogFragment dialog) {
+        // User touched the dialog's negative button
     }
 }
