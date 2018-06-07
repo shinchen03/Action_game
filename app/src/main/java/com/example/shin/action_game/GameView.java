@@ -82,7 +82,7 @@ public class GameView extends SurfaceView implements Droid.Callback, SurfaceHold
     private static final float POWER_GAUGE_HEIGHT = 30;
     private static final Paint PAINT_POWER_GAUGE = new Paint();
     private static final float SCORE_TEXT_SIZE = 80.0f;
-    private long score;
+    public static long score;
 
     static {
         PAINT_POWER_GAUGE.setColor(Color.RED);

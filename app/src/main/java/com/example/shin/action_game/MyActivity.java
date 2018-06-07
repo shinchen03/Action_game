@@ -14,6 +14,7 @@ import android.widget.Toast;
 public class MyActivity extends AppCompatActivity implements GameView.Callback, MyDialog.NoticeDialogListener {
 
     private GameView gameView;
+    DataBaseHelper myDb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,6 +22,7 @@ public class MyActivity extends AppCompatActivity implements GameView.Callback, 
         setContentView(R.layout.activity_my);
         gameView = new GameView(this);
         gameView.setCallback(this);
+        myDb = new DataBaseHelper(this);
         Button startBtn = (Button) findViewById(R.id.startGame);
         startBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -35,6 +37,10 @@ public class MyActivity extends AppCompatActivity implements GameView.Callback, 
     public void onGameOver() {
         Toast.makeText(this, "Game OVer", Toast.LENGTH_LONG).show();
         showNoticeDialog();
+        String score = String.valueOf(GameView.score);
+        if (myDb.updateData("0", score)) {
+            Toast.makeText(this, "New High Score!" + score, Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
