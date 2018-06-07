@@ -2,6 +2,8 @@ package com.example.shin.action_game;
 
 import android.app.Activity;
 import android.app.DialogFragment;
+import android.database.Cursor;
+import android.database.CursorIndexOutOfBoundsException;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -31,14 +33,27 @@ public class MyActivity extends AppCompatActivity implements GameView.Callback, 
                 setContentView(gameView);
             }
         });
+        Button scoreBtn = (Button) findViewById(R.id.ranking);
+        scoreBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Cursor res = myDb.getFirstData();
+                if (res.getCount() == 0) {
+                    showMessage("None record");
+                } else {
+                    res.moveToFirst();
+                    showMessage("High Score: " + res.getString(1));
+                }
+            }
+        });
     }
 
     @Override
     public void onGameOver() {
-        Toast.makeText(this, "Game OVer", Toast.LENGTH_LONG).show();
+        // Toast.makeText(this, "Game OVer", Toast.LENGTH_LONG).show();
         showNoticeDialog();
         String score = String.valueOf(GameView.score);
-        if (myDb.updateData("0", score)) {
+        if (myDb.updateData("1", score)) {
             Toast.makeText(this, "New High Score!" + score, Toast.LENGTH_LONG).show();
         }
     }
@@ -67,6 +82,7 @@ public class MyActivity extends AppCompatActivity implements GameView.Callback, 
     @Override
     public void onDialogPositiveClick(DialogFragment dialog) {
         // User touched the dialog's positive button
+        GameView.score = 0;
         gameView = new GameView(this);
         gameView.setCallback(this);
         setContentView(R.layout.activity_my);
@@ -76,5 +92,9 @@ public class MyActivity extends AppCompatActivity implements GameView.Callback, 
     @Override
     public void onDialogNegativeClick(DialogFragment dialog) {
         // User touched the dialog's negative button
+    }
+
+    public void showMessage(String text) {
+        Toast.makeText(this, text, Toast.LENGTH_LONG).show();
     }
 }
