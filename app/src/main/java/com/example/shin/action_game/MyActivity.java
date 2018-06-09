@@ -13,10 +13,14 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.w3c.dom.Text;
+
 public class MyActivity extends AppCompatActivity implements GameView.Callback, MyDialog.NoticeDialogListener {
 
     private GameView gameView;
     DataBaseHelper myDb;
+    private String score;
+    private String highScore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,16 +50,23 @@ public class MyActivity extends AppCompatActivity implements GameView.Callback, 
                 }
             }
         });
+
     }
 
     @Override
     public void onGameOver() {
         // Toast.makeText(this, "Game OVer", Toast.LENGTH_LONG).show();
-        showNoticeDialog();
-        String score = String.valueOf(GameView.score);
+        score = String.valueOf(GameView.score);
+
         if (myDb.updateData("1", score)) {
             Toast.makeText(this, "New High Score!" + score, Toast.LENGTH_LONG).show();
+            highScore = score;
+        } else {
+            Cursor c = myDb.getFirstData();
+            c.moveToFirst();
+            highScore = c.getString(1);
         }
+        showNoticeDialog();
     }
 
     @Override
@@ -72,7 +83,8 @@ public class MyActivity extends AppCompatActivity implements GameView.Callback, 
 
     public void showNoticeDialog() {
         // Create an instance of the dialog fragment and show it
-        DialogFragment dialog = new MyDialog();
+        MyDialog dialog = new MyDialog();
+        dialog.setScore(highScore, score);
         dialog.show(getFragmentManager(), "test");
     }
 
